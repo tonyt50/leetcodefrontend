@@ -7,7 +7,7 @@
   height: 40vmin;
 }
 
-.App-header {
+.App-body {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -22,6 +22,16 @@
   color: #61dafb;
 }
 
+.Connect4Row {
+  display: flex;
+}
+
+.Connect4Button {
+  padding: 5px 8px;
+  height: 50px;
+  width: 50px;
+  border: solid 1px rgb(31, 13, 114);
+}
 .Result {
   padding: 5px 8px;
   height: 50px;
