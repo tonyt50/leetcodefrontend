@@ -1,3 +1,7 @@
+button {
+  outline: none;
+}
+
 .App {
   text-align: center;
 }
@@ -30,8 +34,30 @@
   padding: 5px 8px;
   height: 50px;
   width: 50px;
+  font-size: x-large;
   border: solid 1px rgb(31, 13, 114);
 }
+
+.GameButton {
+  transition: all 0.5s;
+  padding: 5px 8px;
+  height: 50px;
+  width: 300px;
+  font-size: large;
+  color: aqua;
+  border: solid 1px rgb(17, 207, 27);
+  margin-bottom: 10px;
+  background-color: rebeccapurple;
+  border-radius: 10px;
+  box-shadow: 0 0 black;
+}
+
+.GameButton:hover {
+  box-shadow: 10px 12px black;
+  width: 320px;
+  transform: translateY(-4px);
+}
+
 .Result {
   padding: 5px 8px;
   height: 50px;
