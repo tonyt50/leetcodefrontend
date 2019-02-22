@@ -124,48 +124,20 @@ function calculateWinner(
   squares: SquareValues[][],
   lastChange: Vector
 ): "X" | "O" | undefined {
-  const results: { [key in directions]: number } = {
-    diagonalLeft: 1,
-    diagonalRight: 1,
-    horizontal: 1,
-    vertical: 1
+  const results: { [key in directions]: {value: number, vector: Vector} } = {
+    diagonalLeft: {value: 1, vector: { x: -1, y: 1 }},
+    diagonalRight: {value: 1, vector: { x: 1, y: 1 }},
+    horizontal: {value: 1, vector: { x: 1, y: 0 }},
+    vertical: {value: 1, vector: { x: 0, y: 1 }}
   };
 
   const team = squares[lastChange.y][lastChange.x];
 
-  for (const direction in results) {
-    switch (direction) {
-      case "horizontal":
-        results.horizontal = calculateNoOfContinousTeamAlongVector(
-          squares,
-          lastChange,
-          { x: 1, y: 0 }
-        );
-
-      case "vertical":
-        results.vertical = calculateNoOfContinousTeamAlongVector(
-          squares,
-          lastChange,
-          { x: 0, y: 1 }
-        );
-
-      case "diagonalLeft":
-        results.diagonalLeft = calculateNoOfContinousTeamAlongVector(
-          squares,
-          lastChange,
-          { x: -1, y: 1 }
-        );
-
-      case "diagonalRight":
-        results.diagonalRight = calculateNoOfContinousTeamAlongVector(
-          squares,
-          lastChange,
-          { x: 1, y: 1 }
-        );
-    }
+  for (const direction of Object.values(results)) {
+    direction.value = calculateNoOfContinousTeamAlongVector(squares, lastChange, direction.vector)
   }
 
-  if (Object.values(results).some(value => value >= 4)) {
+  if (Object.values(results).some(result => result.value >= 4)) {
     return team === "" ? undefined : team;
   }
 
