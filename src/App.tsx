@@ -3,14 +3,25 @@ import React, { Component } from "react";
 import "./App.css";
 import { Vector } from "./types";
 
+type DirectionsObject<T extends string> = {[key in T]: Vector};
+
 type SquareValues = "X" | "O" | "";
 
 type Squares = SquareValues[][];
+
+type directions = "horizontal" | "vertical" | "diagonalLeft" | "diagonalRight";
 
 interface AppState {
   squares: Squares;
   currentPlayer: SquareValues;
   winner: "X" | "O" | undefined;
+}
+
+const directionsObject: DirectionsObject<directions> = {
+  diagonalLeft: {x: -1, y: 1},
+  diagonalRight: {x: 1, y: 1},
+  horizontal: {x: 1, y: 0},
+  vertical: {x: 0, y: 1}
 }
 
 class App extends Component<{}, AppState> {
@@ -35,7 +46,7 @@ class App extends Component<{}, AppState> {
       newSquares[rowToPlaceSquare] = [...newSquares[rowToPlaceSquare]];
       newSquares[rowToPlaceSquare][x] = currentPlayer;
 
-      const winner = calculateWinner(newSquares, { x, y: rowToPlaceSquare });
+      const winner = calculateWinner(newSquares, { x, y: rowToPlaceSquare }, directionsObject);
 
       return {
         squares: newSquares,
@@ -118,26 +129,20 @@ function findEmptyRowInColumn(
   return squares.length - 1;
 }
 
-type directions = "horizontal" | "vertical" | "diagonalLeft" | "diagonalRight";
-
-function calculateWinner(
+function calculateWinner<D extends string>(
   squares: SquareValues[][],
-  lastChange: Vector
+  lastChange: Vector,
+  directions: DirectionsObject<D>
 ): "X" | "O" | undefined {
-  const results: { [key in directions]: {value: number, vector: Vector} } = {
-    diagonalLeft: {value: 1, vector: { x: -1, y: 1 }},
-    diagonalRight: {value: 1, vector: { x: 1, y: 1 }},
-    horizontal: {value: 1, vector: { x: 1, y: 0 }},
-    vertical: {value: 1, vector: { x: 0, y: 1 }}
-  };
+  const results: {[key: string]: number} = {}
 
   const team = squares[lastChange.y][lastChange.x];
 
-  for (const direction of Object.values(results)) {
-    direction.value = calculateNoOfContinousTeamAlongVector(squares, lastChange, direction.vector)
+  for (const [directionName, vector] of Object.entries<Vector>(directions)) {
+    results[directionName] = calculateNoOfContinousTeamAlongVector(squares, lastChange, vector)
   }
 
-  if (Object.values(results).some(result => result.value >= 4)) {
+  if (Object.values(results).some(result => result >= 4)) {
     return team === "" ? undefined : team;
   }
 
