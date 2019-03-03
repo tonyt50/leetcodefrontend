@@ -2,8 +2,9 @@ import React, { Component } from "react";
 // import logo from "./logo.svg";
 import "./App.css";
 import { Vector } from "./types";
+import { ReactComponent as Piece } from "./piece.svg";
 
-type DirectionsObject<T extends string> = {[key in T]: Vector};
+type DirectionsObject<T extends string> = { [key in T]: Vector };
 
 type SquareValues = "X" | "O" | "";
 
@@ -15,14 +16,15 @@ interface AppState {
   squares: Squares;
   currentPlayer: SquareValues;
   winner: "X" | "O" | undefined;
+  whatColumnIsHoverd: number | undefined;
 }
 
 const directionsObject: DirectionsObject<directions> = {
-  diagonalLeft: {x: -1, y: 1},
-  diagonalRight: {x: 1, y: 1},
-  horizontal: {x: 1, y: 0},
-  vertical: {x: 0, y: 1}
-}
+  diagonalLeft: { x: -1, y: 1 },
+  diagonalRight: { x: 1, y: 1 },
+  horizontal: { x: 1, y: 0 },
+  vertical: { x: 0, y: 1 }
+};
 
 class App extends Component<{}, AppState> {
   state: AppState = createInitialAppState();
@@ -46,7 +48,11 @@ class App extends Component<{}, AppState> {
       newSquares[rowToPlaceSquare] = [...newSquares[rowToPlaceSquare]];
       newSquares[rowToPlaceSquare][x] = currentPlayer;
 
-      const winner = calculateWinner(newSquares, { x, y: rowToPlaceSquare }, directionsObject);
+      const winner = calculateWinner(
+        newSquares,
+        { x, y: rowToPlaceSquare },
+        directionsObject
+      );
 
       return {
         squares: newSquares,
@@ -60,8 +66,19 @@ class App extends Component<{}, AppState> {
     this.setState(createInitialAppState());
   };
 
+  onColumnHover = (x: number | undefined) => {
+    this.setState({ whatColumnIsHoverd: x });
+  };
+
   render() {
     const { winner, currentPlayer } = this.state;
+    const turnMessage = (
+      <>{currentPlayer === "X" ? <Piece /> : <Piece fill="yellow" />} turn!</>
+    );
+    const winningMessage = winner && (
+      <>{winner === "X" ? <Piece /> : <Piece fill="yellow" />} is the winner!</>
+    );
+
     return (
       <div className="App">
         <div className="App-body">
@@ -69,21 +86,33 @@ class App extends Component<{}, AppState> {
           <button onClick={this.newGame} className="GameButton">
             New Game
           </button>
-          <p>
-            {winner ? `${winner} is the winner!` : `${currentPlayer}'s turn!`}
-          </p>
+          <p>{winningMessage || turnMessage}</p>
           <div>
             {this.state.squares.map((row, y) => (
               <div className="Connect4Row" key={y}>
-                {row.map((squareValue, x) => (
-                  <button
-                    className="Connect4Button"
-                    onClick={() => this.onConnect4Click(x, y)}
-                    key={`${x}-${y}`}
-                  >
-                    {squareValue}
-                  </button>
-                ))}
+                {row.map((squareValue, x) => {
+                  let classNames = "Connect4Button";
+                  if (this.state.whatColumnIsHoverd === x) {
+                    classNames += " hovered";
+                  }
+                  return (
+                    <button
+                      onMouseEnter={() => this.onColumnHover(x)}
+                      onMouseOut={() => this.onColumnHover(undefined)}
+                      className={classNames}
+                      onClick={() => this.onConnect4Click(x, y)}
+                      key={`${x}-${y}`}
+                    >
+                      {squareValue === "X" ? (
+                        <Piece />
+                      ) : squareValue === "O" ? (
+                        <Piece fill="yellow" />
+                      ) : (
+                        undefined
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -99,7 +128,8 @@ function createInitialAppState(): AppState {
   return {
     squares: createInitialSquares(),
     currentPlayer: "X",
-    winner: undefined
+    winner: undefined,
+    whatColumnIsHoverd: undefined
   };
 }
 
@@ -134,12 +164,16 @@ function calculateWinner<D extends string>(
   lastChange: Vector,
   directions: DirectionsObject<D>
 ): "X" | "O" | undefined {
-  const results: {[key: string]: number} = {}
+  const results: { [key: string]: number } = {};
 
   const team = squares[lastChange.y][lastChange.x];
 
   for (const [directionName, vector] of Object.entries<Vector>(directions)) {
-    results[directionName] = calculateNoOfContinousTeamAlongVector(squares, lastChange, vector)
+    results[directionName] = calculateNoOfContinousTeamAlongVector(
+      squares,
+      lastChange,
+      vector
+    );
   }
 
   if (Object.values(results).some(result => result >= 4)) {

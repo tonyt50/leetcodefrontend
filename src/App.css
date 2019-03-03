@@ -2,6 +2,11 @@ button {
   outline: none;
 }
 
+svg {
+  display: inline-block;
+  vertical-align: bottom;
+}
+
 .App {
   text-align: center;
 }
@@ -31,11 +36,19 @@ button {
 }
 
 .Connect4Button {
-  padding: 5px 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
   height: 50px;
   width: 50px;
   font-size: x-large;
   border: solid 1px rgb(31, 13, 114);
+}
+
+.Connect4Button.hovered {
+  box-shadow: 8px 10px rgb(83, 31, 143);
+  transform: translateY(-4px);
 }
 
 .GameButton {
