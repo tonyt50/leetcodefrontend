@@ -73,10 +73,16 @@ class App extends Component<{}, AppState> {
   render() {
     const { winner, currentPlayer } = this.state;
     const turnMessage = (
-      <>{currentPlayer === "X" ? <Piece /> : <Piece fill="yellow" />} turn!</>
+      <>
+        {currentPlayer === "X" ? "Red's" : "Yellow's"}{" "}
+        {currentPlayer === "X" ? <Piece /> : <Piece fill="yellow" />} turn!
+      </>
     );
     const winningMessage = winner && (
-      <>{winner === "X" ? <Piece /> : <Piece fill="yellow" />} is the winner!</>
+      <>
+        {winner === "X" ? "Red" : "Yellow"}{" "}
+        {winner === "X" ? <Piece /> : <Piece fill="yellow" />} is the winner!
+      </>
     );
 
     return (
@@ -97,8 +103,8 @@ class App extends Component<{}, AppState> {
                   }
                   return (
                     <button
-                      onMouseEnter={() => this.onColumnHover(x)}
-                      onMouseOut={() => this.onColumnHover(undefined)}
+                      onMouseOver={() => this.onColumnHover(x)}
+                      onMouseLeave={() => this.onColumnHover(undefined)}
                       className={classNames}
                       onClick={() => this.onConnect4Click(x, y)}
                       key={`${x}-${y}`}
