@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 // import logo from "./logo.svg";
 import "./App.css";
-import { Vector } from "./types";
 import { ReactComponent as Piece } from "./piece.svg";
+import { Vector, WinningData } from "./types";
 
 type DirectionsObject<T extends string> = { [key in T]: Vector };
 
@@ -15,7 +15,7 @@ type directions = "horizontal" | "vertical" | "diagonalLeft" | "diagonalRight";
 interface AppState {
   squares: Squares;
   currentPlayer: SquareValues;
-  winner: "X" | "O" | undefined;
+  winningData: WinningData | undefined;
   whatColumnIsHoverd: number | undefined;
 }
 
@@ -33,7 +33,7 @@ class App extends Component<{}, AppState> {
     console.log(`Row: ${x}, Col: ${y}`);
     const rowToPlaceSquare = findEmptyRowInColumn(this.state.squares, x);
 
-    if (this.state.winner) {
+    if (this.state.winningData) {
       return;
     }
 
@@ -48,16 +48,12 @@ class App extends Component<{}, AppState> {
       newSquares[rowToPlaceSquare] = [...newSquares[rowToPlaceSquare]];
       newSquares[rowToPlaceSquare][x] = currentPlayer;
 
-      const winner = calculateWinner(
-        newSquares,
-        { x, y: rowToPlaceSquare },
-        directionsObject
-      );
+      const winningData = calculateWinnerData(newSquares, { x, y: rowToPlaceSquare }, directionsObject);
 
       return {
         squares: newSquares,
         currentPlayer: currentPlayer === "X" ? "O" : "X",
-        winner
+        winningData
       };
     });
   };
@@ -71,17 +67,17 @@ class App extends Component<{}, AppState> {
   };
 
   render() {
-    const { winner, currentPlayer } = this.state;
+    const { winningData, currentPlayer } = this.state;
     const turnMessage = (
       <>
-        {currentPlayer === "X" ? "Red's" : "Yellow's"}{" "}
-        {currentPlayer === "X" ? <Piece /> : <Piece fill="yellow" />} turn!
+        {currentPlayer === "X" ? "Red's" : "Yellow's"} {currentPlayer === "X" ? <Piece /> : <Piece fill="yellow" />}{" "}
+        turn!
       </>
     );
-    const winningMessage = winner && (
+    const winningMessage = winningData && (
       <>
-        {winner === "X" ? "Red" : "Yellow"}{" "}
-        {winner === "X" ? <Piece /> : <Piece fill="yellow" />} is the winner!
+        {winningData.winner === "X" ? "Red" : "Yellow"}{" "}
+        {winningData.winner === "X" ? <Piece /> : <Piece fill="yellow" />} is the winner!
       </>
     );
 
@@ -101,6 +97,12 @@ class App extends Component<{}, AppState> {
                   if (this.state.whatColumnIsHoverd === x) {
                     classNames += " hovered";
                   }
+                  if (
+                    winningData &&
+                    winningData.winningSquares.some(winningSquare => winningSquare.x === x && winningSquare.y === y)
+                  ) {
+                    classNames += " winner";
+                  }
                   return (
                     <button
                       onMouseOver={() => this.onColumnHover(x)}
@@ -110,9 +112,9 @@ class App extends Component<{}, AppState> {
                       key={`${x}-${y}`}
                     >
                       {squareValue === "X" ? (
-                        <Piece />
+                        <Piece className="counter" />
                       ) : squareValue === "O" ? (
-                        <Piece fill="yellow" />
+                        <Piece className="counter" fill="yellow" />
                       ) : (
                         undefined
                       )}
@@ -134,7 +136,7 @@ function createInitialAppState(): AppState {
   return {
     squares: createInitialSquares(),
     currentPlayer: "X",
-    winner: undefined,
+    winningData: undefined,
     whatColumnIsHoverd: undefined
   };
 }
@@ -152,10 +154,7 @@ function createInitialSquares(): SquareValues[][] {
   ];
 }
 
-function findEmptyRowInColumn(
-  squares: SquareValues[][],
-  x: number
-): number | undefined {
+function findEmptyRowInColumn(squares: SquareValues[][], x: number): number | undefined {
   for (const [index, row] of squares.entries()) {
     if (row[x] !== "") {
       return index === 0 ? undefined : index - 1;
@@ -165,72 +164,62 @@ function findEmptyRowInColumn(
   return squares.length - 1;
 }
 
-function calculateWinner<D extends string>(
+function calculateWinnerData<D extends string>(
   squares: SquareValues[][],
   lastChange: Vector,
   directions: DirectionsObject<D>
-): "X" | "O" | undefined {
-  const results: { [key: string]: number } = {};
+): WinningData | undefined {
+  const lastPlayer = squares[lastChange.y][lastChange.x];
 
-  const team = squares[lastChange.y][lastChange.x];
-
-  for (const [directionName, vector] of Object.entries<Vector>(directions)) {
-    results[directionName] = calculateNoOfContinousTeamAlongVector(
-      squares,
-      lastChange,
-      vector
-    );
+  if (lastPlayer === "") {
+    throw new Error("The last turn was made by someone not on a team?!?!");
   }
 
-  if (Object.values(results).some(result => result >= 4)) {
-    return team === "" ? undefined : team;
+  const results: WinningData = {
+    winner: lastPlayer,
+    winningSquares: []
+  };
+
+  for (const vector of Object.values<Vector>(directions)) {
+    const squaresAlongVector = calculateSquaresAlongVector(squares, lastChange, vector);
+    if (squaresAlongVector.length >= 4) {
+      results.winningSquares.push(...squaresAlongVector);
+    }
   }
 
-  return undefined;
+  if (results.winningSquares.length > 0) {
+    return results;
+  } else {
+    return undefined;
+  }
 }
 
-function calculateNoOfContinousTeamAlongVector(
-  squares: SquareValues[][],
-  startPosition: Vector,
-  vector: Vector
-): number {
-  let result = 1;
+function calculateSquaresAlongVector(squares: SquareValues[][], startPosition: Vector, vector: Vector): Vector[] {
+  const result: Vector[] = [startPosition];
   const team = getSquareValue(squares, startPosition);
 
   let newVector = transformVector(startPosition, vector);
-  while (
-    isVectorInsideGrid(squares, newVector) &&
-    getSquareValue(squares, newVector) === team
-  ) {
-    result++;
+  while (isVectorInsideGrid(squares, newVector) && getSquareValue(squares, newVector) === team) {
+    result.push(newVector);
     newVector = transformVector(newVector, vector);
   }
 
   newVector = transformVector(startPosition, inverseVector(vector));
-  while (
-    isVectorInsideGrid(squares, newVector) &&
-    getSquareValue(squares, newVector) === team
-  ) {
-    result++;
+  while (isVectorInsideGrid(squares, newVector) && getSquareValue(squares, newVector) === team) {
+    result.push(newVector);
     newVector = transformVector(newVector, inverseVector(vector));
   }
   return result;
 }
 
-function isVectorInsideGrid(
-  squares: SquareValues[][],
-  { x, y }: Vector
-): boolean {
+function isVectorInsideGrid(squares: SquareValues[][], { x, y }: Vector): boolean {
   if (x < 0 || y < 0 || y > squares.length - 1 || x > squares[0].length - 1) {
     return false;
   }
   return true;
 }
 
-function getSquareValue(
-  squares: SquareValues[][],
-  position: Vector
-): SquareValues {
+function getSquareValue(squares: SquareValues[][], position: Vector): SquareValues {
   return squares[position.y][position.x];
 }
 

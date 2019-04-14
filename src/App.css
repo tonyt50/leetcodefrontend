@@ -46,9 +46,32 @@ svg {
   border: solid 1px rgb(31, 13, 114);
 }
 
+.counter {
+  animation-name: drop;
+  animation-duration: 0.5s;
+}
+
+@keyframes blink {
+  from {border-color: black}
+  to {border-color: red}
+}
+
+@keyframes drop {
+  from {transform: translateY(-70px)}
+  to {transform: translateY(0)}
+}
+
 .Connect4Button.hovered {
   box-shadow: 8px 10px rgb(83, 31, 143);
   transform: translateY(-4px);
+}
+
+.Connect4Button.winner {
+  border: solid 3px red;
+  animation-name: blink;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
 }
 
 .GameButton {

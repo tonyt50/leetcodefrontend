@@ -1,0 +1,29 @@
+{
+  "rulesDirectory": ["tslint-plugin-prettier"],
+  "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
+  "rules": {
+    // prettier
+    "prettier": [
+      true,
+      {
+        "tabWidth": 2,
+        "printWidth": 120
+      }
+    ],
+    // tslint rules
+    "no-empty-interface": {
+      "severity": "warn"
+    },
+    "interface-name": false,
+    "member-access": false,
+    "object-literal-sort-keys": false,
+    "no-console": {
+      "severity": "warn"
+    },
+    "no-unused-variable": {
+      "severity": "warn"
+    },
+    "no-unused-expression": false,
+    "variable-name": [true, "check-format"]
+  }
+}
