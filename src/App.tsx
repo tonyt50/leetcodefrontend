@@ -30,7 +30,7 @@ class App extends Component<{}, AppState> {
   state: AppState = createInitialAppState();
 
   onConnect4Click = (x: number, y: number) => {
-    console.log(`Row: ${x}, Col: ${y}`);
+    // console.log(`Row: ${x}, Col: ${y}`);
     const rowToPlaceSquare = findEmptyRowInColumn(this.state.squares, x);
 
     if (this.state.winningData) {
@@ -167,6 +167,7 @@ function findEmptyRowInColumn(squares: SquareValues[][], x: number): number | un
 function calculateWinnerData<D extends string>(
   squares: SquareValues[][],
   lastChange: Vector,
+  // tslint:disable-next-line: no-shadowed-variable
   directions: DirectionsObject<D>
 ): WinningData | undefined {
   const lastPlayer = squares[lastChange.y][lastChange.x];
