@@ -1,4 +1,4 @@
-import { Letters } from "./types";
+import { Letters } from "../types";
 
 /**
  * find longest string without duplicats chasraacters in it

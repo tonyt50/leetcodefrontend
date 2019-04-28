@@ -104,12 +104,3 @@ svg {
   min-width: 80px;
   border: solid 1px white;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
