@@ -24,7 +24,7 @@
       "severity": "warn"
     },
     "no-unused-expression": false,
-    "variable-name": [true, "check-format"],
-    "jsx-no-lambda": false
+    "jsx-no-lambda": false,
+    "jsx-boolean-value": false
   }
 }

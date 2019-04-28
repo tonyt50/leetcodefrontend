@@ -1,8 +1,8 @@
 import React, { Component } from "react";
+import { Vector, WinningData } from "../../types";
 // import logo from "./logo.svg";
-import "./App.css";
+import "./Connect4.css";
 import { ReactComponent as Piece } from "./piece.svg";
-import { Vector, WinningData } from "./types";
 
 type DirectionsObject<T extends string> = { [key in T]: Vector };
 
@@ -26,7 +26,7 @@ const directionsObject: DirectionsObject<directions> = {
   vertical: { x: 0, y: 1 }
 };
 
-class App extends Component<{}, AppState> {
+export class Connect4 extends Component<{}, AppState> {
   state: AppState = createInitialAppState();
 
   onConnect4Click = (x: number, y: number) => {
@@ -129,8 +129,6 @@ class App extends Component<{}, AppState> {
     );
   }
 }
-
-export default App;
 
 function createInitialAppState(): AppState {
   return {
