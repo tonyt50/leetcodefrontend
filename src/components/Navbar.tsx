@@ -10,9 +10,13 @@ interface NavbarProps {
 export const Navbar: FC<NavbarProps> = ({ routesData }) => (
   <ol>
     {routesData.map(({ relativeUrl, displayText }) => (
-      <button key={relativeUrl}>
-        <Link to={relativeUrl}>{displayText}</Link>
-      </button>
+      <Link to={relativeUrl} key={relativeUrl}>
+        <button>{displayText}</button>
+      </Link>
+
+      // <button key={relativeUrl}>
+      //   <Link to={relativeUrl}>{displayText}</Link>
+      // </button>
     ))}
   </ol>
 );
