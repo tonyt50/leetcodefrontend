@@ -1,17 +1,17 @@
 import React, { ChangeEvent, FormEvent, PureComponent } from "react";
-import { getLongestSubstringLength } from "../../leetcodeSolutions/longestsubstring";
+import { rotateImage } from "../../leetcodeSolutions/rotateimage";
 
-interface LongestSubstringPageState {
+interface RotateImagePageState {
   inputValue: string;
-  result: number;
+  result: string;
 }
 
-export class LongestSubstringPage extends PureComponent<{}, LongestSubstringPageState> {
+export class RotateImagePage extends PureComponent<{}, RotateImagePageState> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      inputValue: "",
-      result: 0
+      inputValue: "[[1,2,3], [4,5,6], [7,8,9]]",
+      result: ""
     };
   }
 
@@ -21,17 +21,17 @@ export class LongestSubstringPage extends PureComponent<{}, LongestSubstringPage
 
   calculateResult = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const result = getLongestSubstringLength(this.state.inputValue);
+    const result = rotateImage(this.state.inputValue);
     this.setState({ result });
   };
 
   render() {
     return (
       <div>
-        <header>Longest substring page</header>
+        <header>Rotate Image page</header>
         <form onSubmit={this.calculateResult}>
           <input value={this.state.inputValue} onChange={this.handleInputChange} />
-          <button>Calculate Longest Substring</button>
+          <button>Rotate Image</button>
           <div>Result is {this.state.result}</div>
         </form>
       </div>

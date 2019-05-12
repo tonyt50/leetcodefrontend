@@ -7,7 +7,7 @@ import { Letters } from "../types";
  * @example
  *  getLongestSubstringLength("retested") returns 4
  */
-const getLongestSubstringLength = (str: string) => {
+export const getLongestSubstringLength = (str: string) => {
   const chars = [...str];
   const letters: Letters = {};
   let lngsubstr: number = 0;
@@ -35,5 +35,3 @@ const getLongestSubstringLength = (str: string) => {
 
   return lngsubstr;
 };
-
-export default getLongestSubstringLength;

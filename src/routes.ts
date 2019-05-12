@@ -4,6 +4,7 @@ export const leetcode = "/leetcode";
 
 export const leetcodeSubRoutes = {
   longestSubstring: "/longestsubstring",
+  rotateImage: "/rotateImage",
   scratch: "/scratch"
 };
 
@@ -14,5 +15,5 @@ export const leetcodeRoutes = (Object.keys(leetcodeSubRoutes) as Array<keyof typ
     accum[key] = leetcode + leetcodeSubRoutes[key];
     return accum;
   },
-  { longestSubstring: "", scratch: "" }
+  { longestSubstring: "", rotateImage: "", scratch: "" }
 );
