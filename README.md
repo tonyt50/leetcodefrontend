@@ -1,3 +1,7 @@
+this projrct has connect 4
+
+![](connect4-resized.gif)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
