@@ -1,22 +1,32 @@
+import { RowCol } from "../types";
+
 /**
  * rotate image, this is a array rotate 90 degrees.
  * @param json array to rotate
- * @returns json arroy rotated by 90 degrees
+ * @returns json array rotated by 90 degrees
  * @example
  *  rotateimage("[[1,2,3], [4,5,6], [7,8,9]]") returns ("[[7,4,1], [8,5,2], [9,6,3]]")
  */
 export const rotateImage = (str: string) => {
-  const origImage = JSON.parse(str) as number[][];
-  let temp: number;
-
-  for (let col = 0; col < origImage[0].length; col++) {
-    for (let row = origImage.length - 1; row >= 0; row--) {
-      temp = origImage[row][col];
-      origImage[row][col] = origImage[col][row];
-      origImage[col][row] = temp;
+  const arrayToRotate = JSON.parse(str) as number[][];
+  // let temp: number;
+  const squareSize: number = arrayToRotate[0].length;
+  // tslint:disable-next-line: no-console
+  console.log(`squareSize ${squareSize}`);
+  let toRowCol = {} as RowCol;
+  let fromRowCol = {} as RowCol;
+  for (let row = 0; row < squareSize; row++) {
+    for (let col = 0; col < squareSize; col++) {
+      toRowCol = { row: col, col: squareSize - 1 - row };
+      fromRowCol = { row: squareSize - 1 - col, col: row };
+      // tslint:disable-next-line: no-console
+      console.log(
+        `arrayToRotate[row=${row}][col=${col}]=${arrayToRotate[row][col]} : 
+        to   ${toRowCol.row} ${toRowCol.col} value ${arrayToRotate[toRowCol.row][toRowCol.col]} 
+        from ${fromRowCol.row} ${fromRowCol.col} value ${arrayToRotate[fromRowCol.row][fromRowCol.col]}`
+      );
     }
   }
-  const result = origImage;
 
-  return JSON.stringify(result);
-}
+  return JSON.stringify(arrayToRotate);
+};

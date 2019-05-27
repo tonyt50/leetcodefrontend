@@ -7,6 +7,10 @@ export interface Vector {
   y: number;
 }
 
+export interface RowCol {
+  row: number;
+  col: number;
+}
 export interface WinningData {
   winner: "X" | "O";
   winningSquares: Vector[];
