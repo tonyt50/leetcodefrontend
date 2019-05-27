@@ -9,37 +9,35 @@ import { RowCol } from "../types";
  */
 export const rotateImage = (str: string) => {
   const arrayToRotate = JSON.parse(str) as number[][];
-  const maxSquareIndex: number = arrayToRotate[0].length - 1;
+  let maxSquareIndex: number = arrayToRotate[0].length;
+  const depthSquareIndex: number = Math.floor(maxSquareIndex / 2);
   // tslint:disable-next-line: no-console
   console.log(`maxSquareIndex ${maxSquareIndex}`);
+  // tslint:disable-next-line: no-console
+  console.log(`depthSquareIndex ${depthSquareIndex}`);
+  let startRowCol = {} as RowCol;
   let toRowCol = {} as RowCol;
-  let fromRowCol = {} as RowCol;
-  for (let row = 0; maxSquareIndex >= row; row++) {
-    for (let col = 0; maxSquareIndex >= col; col++) {
-      toRowCol = { row: col, col: maxSquareIndex - row };
-      fromRowCol = { row: maxSquareIndex - col, col: row };
-      // tslint:disable-next-line: no-console
-      console.log(
-        `arrayToRotate[row=${row}][col=${col}]=${arrayToRotate[row][col]} : 
-        to   ${toRowCol.row} ${toRowCol.col} value ${arrayToRotate[toRowCol.row][toRowCol.col]} 
-        from ${fromRowCol.row} ${fromRowCol.col} value ${arrayToRotate[fromRowCol.row][fromRowCol.col]}`
-      );
-    }
-  }
-  let startRowCol = { row: 0, col: 0 } as RowCol;
+  let currentRowCol = {} as RowCol;
   let saveItem: number;
-  for (let i = 0; i < maxSquareIndex; i++) {
-    let currentRowCol = { row: startRowCol.row, col: startRowCol.col } as RowCol;
-    let itemToMove = arrayToRotate[maxSquareIndex - currentRowCol.col][currentRowCol.row];
-    toRowCol = { row: currentRowCol.col, col: maxSquareIndex - currentRowCol.row } as RowCol;
-    while (!(toRowCol.row === startRowCol.row && toRowCol.col === startRowCol.col)) {
+  let itemToMove: number;
+
+  for (let j = 0; j < depthSquareIndex; j++) {
+    startRowCol = { row: j, col: j };
+    maxSquareIndex = maxSquareIndex - 1;
+    for (let i = 0; i < maxSquareIndex; i++) {
+      currentRowCol = { row: startRowCol.row, col: startRowCol.col };
+      itemToMove = arrayToRotate[maxSquareIndex + j - currentRowCol.col + j][currentRowCol.row];
       toRowCol = { row: currentRowCol.col, col: maxSquareIndex - currentRowCol.row };
-      saveItem = arrayToRotate[currentRowCol.row][currentRowCol.col];
-      arrayToRotate[currentRowCol.row][currentRowCol.col] = itemToMove;
-      itemToMove = saveItem;
-      currentRowCol = { row: toRowCol.row, col: toRowCol.col };
+      while (!(toRowCol.row === startRowCol.row && toRowCol.col === startRowCol.col)) {
+        saveItem = arrayToRotate[currentRowCol.row][currentRowCol.col];
+        arrayToRotate[currentRowCol.row][currentRowCol.col] = itemToMove;
+        itemToMove = saveItem;
+        toRowCol = { row: currentRowCol.col, col: maxSquareIndex + j - currentRowCol.row + j };
+        currentRowCol = { row: toRowCol.row, col: toRowCol.col };
+      }
+      startRowCol = { row: toRowCol.row, col: toRowCol.col + 1 };
     }
-    startRowCol = { row: toRowCol.row, col: toRowCol.col + 1 };
+    maxSquareIndex = maxSquareIndex - 1;
   }
 
   return JSON.stringify(arrayToRotate);
