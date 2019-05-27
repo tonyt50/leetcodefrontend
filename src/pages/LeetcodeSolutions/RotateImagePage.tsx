@@ -10,7 +10,10 @@ export class RotateImagePage extends PureComponent<{}, RotateImagePageState> {
   constructor(props: {}) {
     super(props);
     this.state = {
+      // inputValue: "[[1]]",
+      // inputValue: "[[1,2], [3,4]]",
       inputValue: "[[1,2,3], [4,5,6], [7,8,9]]",
+      // inputValue: "[[1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,16]]",
       result: ""
     };
   }

@@ -9,16 +9,15 @@ import { RowCol } from "../types";
  */
 export const rotateImage = (str: string) => {
   const arrayToRotate = JSON.parse(str) as number[][];
-  // let temp: number;
-  const squareSize: number = arrayToRotate[0].length;
+  const maxSquareIndex: number = arrayToRotate[0].length - 1;
   // tslint:disable-next-line: no-console
-  console.log(`squareSize ${squareSize}`);
+  console.log(`maxSquareIndex ${maxSquareIndex}`);
   let toRowCol = {} as RowCol;
   let fromRowCol = {} as RowCol;
-  for (let row = 0; row < squareSize; row++) {
-    for (let col = 0; col < squareSize; col++) {
-      toRowCol = { row: col, col: squareSize - 1 - row };
-      fromRowCol = { row: squareSize - 1 - col, col: row };
+  for (let row = 0; maxSquareIndex >= row; row++) {
+    for (let col = 0; maxSquareIndex >= col; col++) {
+      toRowCol = { row: col, col: maxSquareIndex - row };
+      fromRowCol = { row: maxSquareIndex - col, col: row };
       // tslint:disable-next-line: no-console
       console.log(
         `arrayToRotate[row=${row}][col=${col}]=${arrayToRotate[row][col]} : 
@@ -26,6 +25,21 @@ export const rotateImage = (str: string) => {
         from ${fromRowCol.row} ${fromRowCol.col} value ${arrayToRotate[fromRowCol.row][fromRowCol.col]}`
       );
     }
+  }
+  let startRowCol = { row: 0, col: 0 } as RowCol;
+  let saveItem: number;
+  for (let i = 0; i < maxSquareIndex; i++) {
+    let currentRowCol = { row: startRowCol.row, col: startRowCol.col } as RowCol;
+    let itemToMove = arrayToRotate[maxSquareIndex - currentRowCol.col][currentRowCol.row];
+    toRowCol = { row: currentRowCol.col, col: maxSquareIndex - currentRowCol.row } as RowCol;
+    while (!(toRowCol.row === startRowCol.row && toRowCol.col === startRowCol.col)) {
+      toRowCol = { row: currentRowCol.col, col: maxSquareIndex - currentRowCol.row };
+      saveItem = arrayToRotate[currentRowCol.row][currentRowCol.col];
+      arrayToRotate[currentRowCol.row][currentRowCol.col] = itemToMove;
+      itemToMove = saveItem;
+      currentRowCol = { row: toRowCol.row, col: toRowCol.col };
+    }
+    startRowCol = { row: toRowCol.row, col: toRowCol.col + 1 };
   }
 
   return JSON.stringify(arrayToRotate);
