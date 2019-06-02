@@ -27,7 +27,7 @@ export const rotateImage = (str: string) => {
     for (let i = 0; i < maxSquareIndex; i++) {
       currentRowCol = { row: startRowCol.row, col: startRowCol.col };
       itemToMove = arrayToRotate[maxSquareIndex + j - currentRowCol.col + j][currentRowCol.row];
-      toRowCol = { row: currentRowCol.col, col: maxSquareIndex - currentRowCol.row };
+      toRowCol = { row: currentRowCol.col + j + j, col: maxSquareIndex - currentRowCol.row };
       while (!(toRowCol.row === startRowCol.row && toRowCol.col === startRowCol.col)) {
         saveItem = arrayToRotate[currentRowCol.row][currentRowCol.col];
         arrayToRotate[currentRowCol.row][currentRowCol.col] = itemToMove;
