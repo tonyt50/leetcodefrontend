@@ -25,8 +25,10 @@ export class RotateImagePage extends PureComponent<{}, RotateImagePageState> {
 
   calculateResult = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const result = rotateImage(this.state.inputValue);
-    this.setState({ result });
+    // TODO: Create validation function for JSON.parse() result. Check is it really an array of arrays.
+    const parsedInput = JSON.parse(this.state.inputValue) as any[][];
+    const result = rotateImage(parsedInput);
+    this.setState({ result: JSON.stringify(result) });
   };
 
   render() {
