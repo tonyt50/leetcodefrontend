@@ -1,4 +1,5 @@
 export const home = "/";
+export const hookstest = "/hookstest";
 export const connect4 = "/connect4";
 export const leetcode = "/leetcode";
 
