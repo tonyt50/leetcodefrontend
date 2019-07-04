@@ -9,6 +9,7 @@ export const HooksTestPage = () => (
       <h2>
         <HooksTest />
       </h2>
+      <h2> how get data from provider?</h2>
     </div>
   </Provider>
 );

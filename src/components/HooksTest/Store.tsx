@@ -11,8 +11,8 @@ export type Store = typeof initialStore;
 export const storeCtx = createContext(initialStore);
 
 export const Provider: React.ComponentType = ({ children }) => {
-  const storehook = useState(initialStore);
-  return <storeCtx.Provider value={storehook[0]}>{children}</storeCtx.Provider>;
+  const storeHook = useState(initialStore);
+  return <storeCtx.Provider value={storeHook[0]}>{children}</storeCtx.Provider>;
 };
 
 export const useGlobalStore = <K extends keyof Store>(property: K) => {
