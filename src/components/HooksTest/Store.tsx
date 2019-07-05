@@ -2,7 +2,8 @@ import React, { createContext, Dispatch, FC, SetStateAction, useContext, useStat
 
 const initialStore = { color: "red", version: 1 };
 export type Store = typeof initialStore;
-
+// this is good typescript guide the docs fmtr
+// https://basarat.gitbooks.io/typescript/docs/types/type-system.html
 // hook and typescript stuff might help get bannas or poem going
 // https://levelup.gitconnected.com/usetypescript-a-complete-guide-to-react-hooks-and-typescript-db1858d1fb9c
 // below typscript example
