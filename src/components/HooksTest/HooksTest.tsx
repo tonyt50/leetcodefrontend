@@ -11,12 +11,12 @@ export const HooksTest = () => {
 
   const [storeObject, setStore] = store;
 
-  const { color: color, version: version } = storeObject;
+  const { color, version } = storeObject;
 
   return (
     <div>
       <button onClick={() => setStore({ color: color === "blue" ? "red" : "blue", version: version + 1 })}>
-        {color}
+        {color} clicks {version}
       </button>
       <li>use global color {value}</li>
       <li>use provider color {color}</li>
