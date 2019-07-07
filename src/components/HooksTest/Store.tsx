@@ -1,4 +1,11 @@
-import React, { createContext, Dispatch, FC, SetStateAction, useContext, useState } from "react";
+import React, {
+  createContext,
+  Dispatch,
+  FC,
+  SetStateAction,
+  useContext,
+  useState
+} from "react";
 
 const initialStore = { color: "red", version: 1 };
 export type Store = typeof initialStore;

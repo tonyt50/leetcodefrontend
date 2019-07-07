@@ -2,15 +2,13 @@
   "rulesDirectory": ["tslint-plugin-prettier"],
   "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
   "rules": {
-    // prettier
     "prettier": [
       true,
       {
         "tabWidth": 2,
-        "printWidth": 120
+        "printWidth": 80
       }
     ],
-    // tslint rules
     "no-empty-interface": {
       "severity": "warn"
     },

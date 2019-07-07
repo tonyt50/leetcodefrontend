@@ -1,26 +1,29 @@
-import React, { useContext } from "react";
-import { storeCtx, useGlobalStore } from "./Store";
+import React from "react";
+import styled from "styled-components";
+import { HooksTestSideA } from "./HooksTestSideA";
+import { HooksTestSideB } from "./HooksTestSideB";
+
+const HooksTestWrapper = styled.div`
+  width: 100%;
+`;
+
+const Title = styled.h1`
+  text-align: center;
+`;
+
+const HookWrapper = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+`;
 
 export const HooksTest = () => {
-  const store = useContext(storeCtx);
-  const value = useGlobalStore("color");
-
-  if (!store) {
-    return null;
-  }
-
-  const [storeObject, setStore] = store;
-
-  const { color, version } = storeObject;
-
   return (
-    <div>
-      <button onClick={() => setStore({ color: color === "blue" ? "red" : "blue", version: version + 1 })}>
-        {color} clicks {version}
-      </button>
-      <li>use global color {value}</li>
-      <li>use provider color {color}</li>
-      <li>use provider version {version}</li>
-    </div>
+    <HooksTestWrapper>
+      <Title>HooksTest</Title>
+      <HookWrapper>
+        <HooksTestSideA />
+        <HooksTestSideB />
+      </HookWrapper>
+    </HooksTestWrapper>
   );
 };
