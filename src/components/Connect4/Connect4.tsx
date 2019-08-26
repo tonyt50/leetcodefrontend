@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Vector, WinningData } from "../../types";
 // import logo from "./logo.svg";
 import "./Connect4.css";
-import { ReactComponent as Piece } from "./piece.svg";
+import { OPiece, XPiece } from "./Piece";
 
 type DirectionsObject<T extends string> = { [key in T]: Vector };
 
@@ -16,7 +16,7 @@ interface AppState {
   squares: Squares;
   currentPlayer: SquareValues;
   winningData: WinningData | undefined;
-  whatColumnIsHoverd: number | undefined;
+  whatColumnIsHovered: number | undefined;
 }
 
 const directionsObject: DirectionsObject<directions> = {
@@ -48,7 +48,11 @@ export class Connect4 extends Component<{}, AppState> {
       newSquares[rowToPlaceSquare] = [...newSquares[rowToPlaceSquare]];
       newSquares[rowToPlaceSquare][x] = currentPlayer;
 
-      const winningData = calculateWinnerData(newSquares, { x, y: rowToPlaceSquare }, directionsObject);
+      const winningData = calculateWinnerData(
+        newSquares,
+        { x, y: rowToPlaceSquare },
+        directionsObject
+      );
 
       return {
         squares: newSquares,
@@ -63,21 +67,22 @@ export class Connect4 extends Component<{}, AppState> {
   };
 
   onColumnHover = (x: number | undefined) => {
-    this.setState({ whatColumnIsHoverd: x });
+    this.setState({ whatColumnIsHovered: x });
   };
 
   render() {
     const { winningData, currentPlayer } = this.state;
+
     const turnMessage = (
       <>
-        {currentPlayer === "X" ? "Red's" : "Yellow's"} {currentPlayer === "X" ? <Piece /> : <Piece fill="yellow" />}{" "}
-        turn!
+        {currentPlayer === "X" ? "Red's" : "Yellow's"}{" "}
+        {currentPlayer === "X" ? <XPiece /> : <OPiece />} turn!
       </>
     );
     const winningMessage = winningData && (
       <>
         {winningData.winner === "X" ? "Red" : "Yellow"}{" "}
-        {winningData.winner === "X" ? <Piece /> : <Piece fill="yellow" />} is the winner!
+        {winningData.winner === "X" ? <XPiece /> : <OPiece />} is the winner!
       </>
     );
 
@@ -94,12 +99,15 @@ export class Connect4 extends Component<{}, AppState> {
               <div className="Connect4Row" key={y}>
                 {row.map((squareValue, x) => {
                   let classNames = "Connect4Button";
-                  if (this.state.whatColumnIsHoverd === x) {
+                  if (this.state.whatColumnIsHovered === x) {
                     classNames += " hovered";
                   }
                   if (
                     winningData &&
-                    winningData.winningSquares.some(winningSquare => winningSquare.x === x && winningSquare.y === y)
+                    winningData.winningSquares.some(
+                      winningSquare =>
+                        winningSquare.x === x && winningSquare.y === y
+                    )
                   ) {
                     classNames += " winner";
                   }
@@ -112,9 +120,9 @@ export class Connect4 extends Component<{}, AppState> {
                       key={`${x}-${y}`}
                     >
                       {squareValue === "X" ? (
-                        <Piece className="counter" />
+                        <XPiece />
                       ) : squareValue === "O" ? (
-                        <Piece className="counter" fill="yellow" />
+                        <OPiece />
                       ) : (
                         undefined
                       )}
@@ -135,7 +143,7 @@ function createInitialAppState(): AppState {
     squares: createInitialSquares(),
     currentPlayer: "X",
     winningData: undefined,
-    whatColumnIsHoverd: undefined
+    whatColumnIsHovered: undefined
   };
 }
 
@@ -152,7 +160,10 @@ function createInitialSquares(): SquareValues[][] {
   ];
 }
 
-function findEmptyRowInColumn(squares: SquareValues[][], x: number): number | undefined {
+function findEmptyRowInColumn(
+  squares: SquareValues[][],
+  x: number
+): number | undefined {
   for (const [index, row] of squares.entries()) {
     if (row[x] !== "") {
       return index === 0 ? undefined : index - 1;
@@ -180,7 +191,11 @@ function calculateWinnerData<D extends string>(
   };
 
   for (const vector of Object.values<Vector>(directions)) {
-    const squaresAlongVector = calculateSquaresAlongVector(squares, lastChange, vector);
+    const squaresAlongVector = calculateSquaresAlongVector(
+      squares,
+      lastChange,
+      vector
+    );
     if (squaresAlongVector.length >= 4) {
       results.winningSquares.push(...squaresAlongVector);
     }
@@ -193,32 +208,48 @@ function calculateWinnerData<D extends string>(
   }
 }
 
-function calculateSquaresAlongVector(squares: SquareValues[][], startPosition: Vector, vector: Vector): Vector[] {
+function calculateSquaresAlongVector(
+  squares: SquareValues[][],
+  startPosition: Vector,
+  vector: Vector
+): Vector[] {
   const result: Vector[] = [startPosition];
   const team = getSquareValue(squares, startPosition);
 
   let newVector = transformVector(startPosition, vector);
-  while (isVectorInsideGrid(squares, newVector) && getSquareValue(squares, newVector) === team) {
+  while (
+    isVectorInsideGrid(squares, newVector) &&
+    getSquareValue(squares, newVector) === team
+  ) {
     result.push(newVector);
     newVector = transformVector(newVector, vector);
   }
 
   newVector = transformVector(startPosition, inverseVector(vector));
-  while (isVectorInsideGrid(squares, newVector) && getSquareValue(squares, newVector) === team) {
+  while (
+    isVectorInsideGrid(squares, newVector) &&
+    getSquareValue(squares, newVector) === team
+  ) {
     result.push(newVector);
     newVector = transformVector(newVector, inverseVector(vector));
   }
   return result;
 }
 
-function isVectorInsideGrid(squares: SquareValues[][], { x, y }: Vector): boolean {
+function isVectorInsideGrid(
+  squares: SquareValues[][],
+  { x, y }: Vector
+): boolean {
   if (x < 0 || y < 0 || y > squares.length - 1 || x > squares[0].length - 1) {
     return false;
   }
   return true;
 }
 
-function getSquareValue(squares: SquareValues[][], position: Vector): SquareValues {
+function getSquareValue(
+  squares: SquareValues[][],
+  position: Vector
+): SquareValues {
   return squares[position.y][position.x];
 }
 
