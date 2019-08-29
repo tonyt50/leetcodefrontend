@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Vector, WinningData } from "../../types";
 // import logo from "./logo.svg";
 import "./Connect4.css";
-import { OPiece, OPieceAnimDrop, XPiece, XPieceAnimDrop } from "./Piece";
+import { CircleWithTextStyled, OPiece, XPiece } from "./Piece";
 
 type DirectionsObject<T extends string> = { [key in T]: Vector };
 
@@ -120,9 +120,9 @@ export class Connect4 extends Component<{}, AppState> {
                       key={`${x}-${y}`}
                     >
                       {squareValue === "X" ? (
-                        <XPieceAnimDrop />
+                        <CircleWithTextStyled value="X" color="red" />
                       ) : squareValue === "O" ? (
-                        <OPieceAnimDrop />
+                        <CircleWithTextStyled value="O" color="yellow" />
                       ) : (
                         undefined
                       )}
