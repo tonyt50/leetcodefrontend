@@ -4,20 +4,14 @@ interface PieceProps {
   value?: "X" | "O";
   color?: "red" | "yellow";
   drop?: number | undefined;
-  dropInPX?: number | undefined;
 }
 
 // use a functional component, that has a styled component wrapping
 export const Piece: FC<PieceProps> = ({ value, color, drop }) => {
-  let dropInPX = 0;
-  if (drop === undefined) {
-    dropInPX = 0;
-  } else {
-    dropInPX = drop * 30;
-  }
-  console.log("drop ", drop, "dropInPX ", dropInPX);
+  console.log("drop ", drop);
+  const newDrop = drop;
   return (
-    <StyledSVG height="30" width="30" dropInPX={dropInPX}>
+    <StyledSVG height="30" width="30" drop={newDrop}>
       <circle
         cx="15"
         cy="15"
@@ -39,7 +33,7 @@ const StyledSVG = styled.svg<PieceProps>`
 
   @keyframes pieceDrop {
     from {
-      transform: translateY(-${({ dropInPX }) => dropInPX}px);
+      transform: translateY(-${({ drop }) => drop}px);
     }
     to {
       transform: translateY(0);

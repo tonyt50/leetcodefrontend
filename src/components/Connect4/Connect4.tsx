@@ -17,6 +17,7 @@ interface AppState {
   currentPlayer: SquareValues;
   winningData: WinningData | undefined;
   whatColumnIsHovered: number | undefined;
+  drop: number | undefined;
 }
 
 const directionsObject: DirectionsObject<directions> = {
@@ -47,7 +48,7 @@ export class Connect4 extends Component<{}, AppState> {
       const newSquares: Squares = [...squares];
       newSquares[rowToPlaceSquare] = [...newSquares[rowToPlaceSquare]];
       newSquares[rowToPlaceSquare][x] = currentPlayer;
-
+      const newDrop = rowToPlaceSquare * 40;
       const winningData = calculateWinnerData(
         newSquares,
         { x, y: rowToPlaceSquare },
@@ -57,7 +58,8 @@ export class Connect4 extends Component<{}, AppState> {
       return {
         squares: newSquares,
         currentPlayer: currentPlayer === "X" ? "O" : "X",
-        winningData
+        winningData,
+        drop: newDrop
       };
     });
   };
@@ -71,7 +73,7 @@ export class Connect4 extends Component<{}, AppState> {
   };
 
   render() {
-    const { winningData, currentPlayer } = this.state;
+    const { winningData, currentPlayer, drop } = this.state;
 
     const turnMessage = (
       <>
@@ -120,9 +122,9 @@ export class Connect4 extends Component<{}, AppState> {
                       key={`${x}-${y}`}
                     >
                       {squareValue === "X" ? (
-                        <Piece value={squareValue} color="red" drop={y} />
+                        <Piece value={squareValue} color="red" drop={drop} />
                       ) : squareValue === "O" ? (
-                        <Piece value={squareValue} color="yellow" drop={y} />
+                        <Piece value={squareValue} color="yellow" drop={drop} />
                       ) : (
                         undefined
                       )}
@@ -143,7 +145,8 @@ function createInitialAppState(): AppState {
     squares: createInitialSquares(),
     currentPlayer: "X",
     winningData: undefined,
-    whatColumnIsHovered: undefined
+    whatColumnIsHovered: undefined,
+    drop: -1
   };
 }
 
