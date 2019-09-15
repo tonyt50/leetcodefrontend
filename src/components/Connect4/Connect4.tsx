@@ -12,12 +12,14 @@ type Squares = SquareValues[][];
 
 type directions = "horizontal" | "vertical" | "diagonalLeft" | "diagonalRight";
 
+type CurrentSquare = Vector;
+
 interface AppState {
   squares: Squares;
   currentPlayer: SquareValues;
   winningData: WinningData | undefined;
   whatColumnIsHovered: number | undefined;
-  drop: number | undefined;
+  currentSquare: CurrentSquare | undefined;
 }
 
 const directionsObject: DirectionsObject<directions> = {
@@ -48,7 +50,6 @@ export class Connect4 extends Component<{}, AppState> {
       const newSquares: Squares = [...squares];
       newSquares[rowToPlaceSquare] = [...newSquares[rowToPlaceSquare]];
       newSquares[rowToPlaceSquare][x] = currentPlayer;
-      const newDrop = rowToPlaceSquare * 40;
       const winningData = calculateWinnerData(
         newSquares,
         { x, y: rowToPlaceSquare },
@@ -59,7 +60,7 @@ export class Connect4 extends Component<{}, AppState> {
         squares: newSquares,
         currentPlayer: currentPlayer === "X" ? "O" : "X",
         winningData,
-        drop: newDrop
+        currentSquare: { x, y: rowToPlaceSquare }
       };
     });
   };
@@ -73,7 +74,7 @@ export class Connect4 extends Component<{}, AppState> {
   };
 
   render() {
-    const { winningData, currentPlayer, drop } = this.state;
+    const { winningData, currentPlayer, currentSquare } = this.state;
 
     const turnMessage = (
       <>
@@ -113,6 +114,30 @@ export class Connect4 extends Component<{}, AppState> {
                   ) {
                     classNames += " winner";
                   }
+                  let thePiece;
+                  if (currentSquare) {
+                    if (currentSquare.x === x && currentSquare.y === y) {
+                      if (squareValue === "X") {
+                        thePiece = (
+                          <Piece value="X" color="red" drop={y * 50} />
+                        );
+                      } else {
+                        thePiece = (
+                          <Piece value="O" color="yellow" drop={y * 50} />
+                        );
+                      }
+                    } else {
+                      if (squareValue === "X" || squareValue === "O") {
+                        if (squareValue === "X") {
+                          thePiece = <XPiece />;
+                        } else {
+                          thePiece = <OPiece />;
+                        }
+                      } else {
+                        thePiece = undefined;
+                      }
+                    }
+                  }
                   return (
                     <button
                       onMouseOver={() => this.onColumnHover(x)}
@@ -121,13 +146,7 @@ export class Connect4 extends Component<{}, AppState> {
                       onClick={() => this.onConnect4Click(x, y)}
                       key={`${x}-${y}`}
                     >
-                      {squareValue === "X" ? (
-                        <Piece value={squareValue} color="red" drop={drop} />
-                      ) : squareValue === "O" ? (
-                        <Piece value={squareValue} color="yellow" drop={drop} />
-                      ) : (
-                        undefined
-                      )}
+                      {thePiece}
                     </button>
                   );
                 })}
@@ -146,7 +165,7 @@ function createInitialAppState(): AppState {
     currentPlayer: "X",
     winningData: undefined,
     whatColumnIsHovered: undefined,
-    drop: -1
+    currentSquare: undefined
   };
 }
 
