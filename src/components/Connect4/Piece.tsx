@@ -29,7 +29,34 @@ export const Piece: FC<PieceProps> = ({ value, color, drop }) => {
   );
 };
 
-const StyledSVG = styled.svg<PieceProps>`
+const StyledSVG = styled.svg<PieceProps>``;
+
+export const XPiece: FC = () => <Piece value="X" color="red" />;
+export const OPiece: FC = () => <Piece value="O" color="yellow" />;
+
+export const PieceAnim: FC<PieceProps> = ({ value, color, drop }) => {
+  console.log("anim drop ", drop);
+  drop = drop ? drop : 0;
+  console.log("anim afterDrop ", drop);
+  return (
+    <StyledSVGAnim height="30" width="30" drop={drop}>
+      <circle
+        cx="15"
+        cy="15"
+        r="12"
+        fill={color}
+        stroke="black"
+        stroke-width="2"
+        alignmentBaseline="middle"
+      />
+      <text x="15" y="22" fill="black" textAnchor="middle" fontSize="75%">
+        {value}
+      </text>
+    </StyledSVGAnim>
+  );
+};
+
+const StyledSVGAnim = styled.svg<PieceProps>`
   animation: pieceDrop 0.5s;
 
   @keyframes pieceDrop {
@@ -41,8 +68,5 @@ const StyledSVG = styled.svg<PieceProps>`
     }
   }
 `;
-
-export const XPiece: FC = () => <Piece value="X" color="red" />;
-export const OPiece: FC = () => <Piece value="O" color="yellow" />;
 
 export default Piece;

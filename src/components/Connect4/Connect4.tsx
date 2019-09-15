@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Vector, WinningData } from "../../types";
 // import logo from "./logo.svg";
 import "./Connect4.css";
-import Piece, { OPiece, XPiece } from "./Piece";
+import { OPiece, PieceAnim, XPiece } from "./Piece";
 
 type DirectionsObject<T extends string> = { [key in T]: Vector };
 
@@ -119,11 +119,11 @@ export class Connect4 extends Component<{}, AppState> {
                     if (currentSquare.x === x && currentSquare.y === y) {
                       if (squareValue === "X") {
                         thePiece = (
-                          <Piece value="X" color="red" drop={y * 50} />
+                          <PieceAnim value="X" color="red" drop={y * 50} />
                         );
                       } else {
                         thePiece = (
-                          <Piece value="O" color="yellow" drop={y * 50} />
+                          <PieceAnim value="O" color="yellow" drop={y * 50} />
                         );
                       }
                     } else {
