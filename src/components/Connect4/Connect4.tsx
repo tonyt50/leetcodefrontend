@@ -119,11 +119,11 @@ export class Connect4 extends Component<{}, AppState> {
                     if (currentSquare.x === x && currentSquare.y === y) {
                       if (squareValue === "X") {
                         thePiece = (
-                          <PieceAnim value="X" color="red" drop={y * 50} />
+                          <PieceAnim key={`${x},${y}`} value="X" color="red" drop={y * 50} />
                         );
                       } else {
                         thePiece = (
-                          <PieceAnim value="O" color="yellow" drop={y * 50} />
+                          <PieceAnim key={`${x},${y}`} value="O" color="yellow" drop={y * 50} />
                         );
                       }
                     } else {

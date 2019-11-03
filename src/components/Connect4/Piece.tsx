@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 interface PieceProps {
   value?: "X" | "O";
   color?: "red" | "yellow";
@@ -9,10 +9,10 @@ interface PieceProps {
 // use a functional component, that has a styled component wrapping
 export const Piece: FC<PieceProps> = ({ value, color, drop }) => {
   console.log("drop ", drop);
-  drop = drop ? drop : 0;
+  //  drop = drop ? drop : 0;
   console.log("afterDrop ", drop);
   return (
-    <StyledSVG height="30" width="30" drop={drop}>
+    <StyledSVG height="30" width="30" drop={drop || 0}>
       <circle
         cx="15"
         cy="15"
@@ -36,10 +36,10 @@ export const OPiece: FC = () => <Piece value="O" color="yellow" />;
 
 export const PieceAnim: FC<PieceProps> = ({ value, color, drop }) => {
   console.log("anim drop ", drop);
-  drop = drop ? drop : 0;
+  //  drop = drop ? drop : 0;
   console.log("anim afterDrop ", drop);
   return (
-    <StyledSVGAnim height="30" width="30" drop={drop}>
+    <StyledSVGAnim height="30" width="30" drop={drop || 0}>
       <circle
         cx="15"
         cy="15"
@@ -56,17 +56,19 @@ export const PieceAnim: FC<PieceProps> = ({ value, color, drop }) => {
   );
 };
 
-const StyledSVGAnim = styled.svg<PieceProps>`
-  animation: pieceDrop 0.5s;
-
-  @keyframes pieceDrop {
+const dropKeyframes = (props: PieceProps) => keyframes`
     from {
-      transform: translateY(-${({ drop }) => drop}px);
+      transform: translateY(
+        -${props.drop}px
+      );
     }
     to {
       transform: translateY(0);
     }
-  }
+`;
+
+const StyledSVGAnim = styled.svg<PieceProps>`
+  animation: ${dropKeyframes} 0.5s;
 `;
 
 export default Piece;

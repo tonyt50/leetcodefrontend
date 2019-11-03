@@ -11,7 +11,7 @@ const HooksTestPageWrapper = styled.div`
   align-items: center;
 `;
 
-export const HooksTestPage = () => (
+const HooksTestPage = () => (
   <Provider>
     <HooksTestPageWrapper>
       <h1>HooksTestPage</h1>
@@ -19,3 +19,5 @@ export const HooksTestPage = () => (
     </HooksTestPageWrapper>
   </Provider>
 );
+
+export default HooksTestPage;
