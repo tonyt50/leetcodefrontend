@@ -8,9 +8,7 @@ interface PieceProps {
 
 // use a functional component, that has a styled component wrapping
 export const Piece: FC<PieceProps> = ({ value, color, drop }) => {
-  console.log("drop ", drop);
-  //  drop = drop ? drop : 0;
-  console.log("afterDrop ", drop);
+  console.log("Piece ", drop);
   return (
     <StyledSVG height="30" width="30" drop={drop || 0}>
       <circle
@@ -35,9 +33,7 @@ export const XPiece: FC = () => <Piece value="X" color="red" />;
 export const OPiece: FC = () => <Piece value="O" color="yellow" />;
 
 export const PieceAnim: FC<PieceProps> = ({ value, color, drop }) => {
-  console.log("anim drop ", drop);
-  //  drop = drop ? drop : 0;
-  console.log("anim afterDrop ", drop);
+  console.log("PieceAnim ", drop);
   return (
     <StyledSVGAnim height="30" width="30" drop={drop || 0}>
       <circle
