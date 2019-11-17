@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, memo } from "react";
 import styled, { keyframes } from "styled-components";
 interface PieceProps {
   value?: "X" | "O";
@@ -29,8 +29,8 @@ export const Piece: FC<PieceProps> = ({ value, color, drop }) => {
 
 const StyledSVG = styled.svg<PieceProps>``;
 
-export const XPiece: FC = () => <Piece value="X" color="red" />;
-export const OPiece: FC = () => <Piece value="O" color="yellow" />;
+export const XPiece: FC = memo(() => <Piece value="X" color="red" />);
+export const OPiece: FC = memo(() => <Piece value="O" color="yellow" />);
 
 export const PieceAnim: FC<PieceProps> = ({ value, color, drop }) => {
   console.log("PieceAnim ", drop);
