@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Vector, WinningData } from "../../types";
 // import logo from "./logo.svg";
 import "./Connect4.css";
-import { OPiece, PieceAnim, XPiece } from "./Piece";
+import { Piece } from "./Piece";
 
 type DirectionsObject<T extends string> = { [key in T]: Vector };
 
@@ -79,13 +79,23 @@ export class Connect4 extends Component<{}, AppState> {
     const turnMessage = (
       <>
         {currentPlayer === "X" ? "Red's" : "Yellow's"}{" "}
-        {currentPlayer === "X" ? <XPiece /> : <OPiece />} turn!
+        {currentPlayer === "X" ? (
+          <Piece value="X" color={"red"} />
+        ) : (
+          <Piece value="O" color={"yellow"} />
+        )}{" "}
+        turn!
       </>
     );
     const winningMessage = winningData && (
       <>
         {winningData.winner === "X" ? "Red" : "Yellow"}{" "}
-        {winningData.winner === "X" ? <XPiece /> : <OPiece />} is the winner!
+        {winningData.winner === "X" ? (
+          <Piece value="X" color={"red"} />
+        ) : (
+          <Piece value="O" color={"yellow"} />
+        )}{" "}
+        is the winner!
       </>
     );
 
@@ -121,7 +131,7 @@ export class Connect4 extends Component<{}, AppState> {
                         thePiece = undefined;
                       } else {
                         thePiece = (
-                          <PieceAnim
+                          <Piece
                             value={squareValue}
                             color={squareValue === "X" ? "red" : "yellow"}
                             drop={y * 50}
@@ -130,11 +140,12 @@ export class Connect4 extends Component<{}, AppState> {
                       }
                     } else {
                       if (squareValue === "X" || squareValue === "O") {
-                        if (squareValue === "X") {
-                          thePiece = <XPiece />;
-                        } else {
-                          thePiece = <OPiece />;
-                        }
+                        thePiece = (
+                          <Piece
+                            value={squareValue}
+                            color={squareValue === "X" ? "red" : "yellow"}
+                          />
+                        );
                       }
                     }
                   }

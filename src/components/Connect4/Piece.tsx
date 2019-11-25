@@ -6,52 +6,6 @@ interface PieceProps {
   drop?: number | undefined;
 }
 
-// use a functional component, that has a styled component wrapping
-export const Piece: FC<PieceProps> = ({ value, color, drop }) => {
-  console.log("Piece ", drop);
-  return (
-    <StyledSVG height="30" width="30" drop={drop || 0}>
-      <circle
-        cx="15"
-        cy="15"
-        r="12"
-        fill={color}
-        stroke="black"
-        stroke-width="2"
-        alignmentBaseline="middle"
-      />
-      <text x="15" y="22" fill="black" textAnchor="middle" fontSize="75%">
-        {value}
-      </text>
-    </StyledSVG>
-  );
-};
-
-const StyledSVG = styled.svg<PieceProps>``;
-
-export const XPiece: FC = memo(() => <Piece value="X" color="red" />);
-export const OPiece: FC = memo(() => <Piece value="O" color="yellow" />);
-
-export const PieceAnim: FC<PieceProps> = ({ value, color, drop }) => {
-  console.log("PieceAnim ", drop);
-  return (
-    <StyledSVGAnim height="30" width="30" drop={drop || 0}>
-      <circle
-        cx="15"
-        cy="15"
-        r="12"
-        fill={color}
-        stroke="black"
-        stroke-width="2"
-        alignmentBaseline="middle"
-      />
-      <text x="15" y="22" fill="black" textAnchor="middle" fontSize="75%">
-        {value}
-      </text>
-    </StyledSVGAnim>
-  );
-};
-
 const dropKeyframes = (props: PieceProps) => keyframes`
     from {
       transform: translateY(
@@ -63,8 +17,30 @@ const dropKeyframes = (props: PieceProps) => keyframes`
     }
 `;
 
-const StyledSVGAnim = styled.svg<PieceProps>`
+const StyledSVGPiece = styled.svg<PieceProps>`
   animation: ${dropKeyframes} 0.5s;
 `;
 
-export default Piece;
+export const ThisPiece: FC<PieceProps> = ({ value, color, drop }) => {
+  console.log("Piece ", drop, color, value);
+  return (
+    <StyledSVGPiece height="30" width="30" drop={drop || 0}>
+      <circle
+        cx="15"
+        cy="15"
+        r="12"
+        fill={color}
+        stroke="black"
+        strokeWidth="2"
+        alignmentBaseline="middle"
+      />
+      <text x="15" y="22" fill="black" textAnchor="middle" fontSize="75%">
+        {value}
+      </text>
+    </StyledSVGPiece>
+  );
+};
+
+export const Piece: FC<PieceProps> = memo(({ value, color, drop }) => (
+  <ThisPiece value={value} color={color} drop={drop} />
+));
